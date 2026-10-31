@@ -1,0 +1,14 @@
+{
+  "name": "taller-playwright-hu07-resenas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Entrega HU-07: Reseñas de El Rincón del Café",
+  "scripts": {
+    "instalar": "npm ci --prefix app && npm ci --prefix pruebas && npm exec --prefix pruebas -- playwright install chromium",
+    "test": "npm test --prefix pruebas",
+    "test:aceptacion": "npm run test:aceptacion --prefix pruebas",
+    "test:bug": "npm run test:bug --prefix pruebas",
+    "test:referencia": "npm run test:referencia --prefix pruebas",
+    "test:ui": "npm run test:ui --prefix pruebas"
+  }
+}

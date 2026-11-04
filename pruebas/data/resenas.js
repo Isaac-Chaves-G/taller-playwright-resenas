@@ -1,3 +1,4 @@
+// Los promedios esperados se calcularon con los datos de seed.json.
 export const escenario = {
   promedioInicial: 4,
   cantidadInicial: 4,
@@ -28,7 +29,7 @@ export const calificacionesValidas = [1, 2, 3, 4, 5].map((calificacion) => ({
   datos: { calificacion, nombre: `Cliente ${calificacion}`, comentario: `Reseña con ${calificacion} estrellas` },
 }));
 
-// Particiones inválidas y vecinos de los límites 1 y 5.
+// 0 y 6 están justo fuera del rango. Los demás cubren otras entradas inválidas.
 export const calificacionesInvalidas = [
   { id: '01', nombre: 'ausente', cuerpo: {} },
   { id: '02', nombre: 'vacía', cuerpo: { calificacion: '' } },

@@ -13,9 +13,11 @@ export class PaginaResenas {
     this.mensaje = page.getByRole('status');
   }
 
+  // Cada reseña tiene su propio id para elegir sus botones sin confundir filas.
   fila(id) { return this.page.getByTestId(`resena-${id}`); }
 
   async abrir() {
+    // Escuchamos antes del clic para no perder la respuesta si llega rápido.
     const carga = this.page.waitForResponse((r) => r.url().endsWith('/api/resenas') && r.request().method() === 'GET');
     await this.menu.click();
     await carga;
@@ -29,6 +31,7 @@ export class PaginaResenas {
     const respuesta = this.page.waitForResponse((r) => r.url().endsWith('/api/resenas') && r.request().method() === 'POST');
     await this.enviar.click();
     const r = await respuesta;
+    // Un envío rechazado no devuelve el id de una nueva reseña.
     if (!r.ok()) return null;
     return (await r.json()).id;
   }
@@ -37,7 +40,7 @@ export class PaginaResenas {
     const actualizacion = this.page.waitForResponse((r) => r.url().endsWith('/api/resenas') && r.request().method() === 'GET');
     await this.fila(id).getByRole('button', { name: accion, exact: true }).click();
     await actualizacion;
-    // El GET recibido aún puede estar pendiente de pintar el DOM.
+    // La respuesta puede llegar antes de que la pantalla muestre el nuevo estado.
     const estado = accion === 'Publicar' ? '[publicada]' : '[oculta]';
     await this.fila(id).filter({ hasText: estado }).waitFor();
   }

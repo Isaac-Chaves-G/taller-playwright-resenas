@@ -13,6 +13,7 @@ export class PaginaLogin {
     await this.correo.fill(correo);
     await this.contrasena.fill(contrasena);
     await this.botonIngresar.click();
+    // El menú aparece cuando el inicio de sesión ya terminó.
     await this.menuResenas.waitFor({ state: 'visible' });
   }
 }

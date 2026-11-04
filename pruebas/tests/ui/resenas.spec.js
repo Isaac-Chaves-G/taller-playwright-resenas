@@ -1,6 +1,6 @@
 import { test, expect } from '../../fixtures/resenas.js';
 import { escenario as e, calificacionesValidas } from '../../data/resenas.js';
-
+// El fixture prepara la sesión y los datos; aquí comprobamos lo que ve el cliente.
 test('UI-01 Solo las publicadas forman el promedio inicial @bug @HU07 @smoketest', async ({ resenas }) => {
   await expect(resenas.resenas).toHaveCount(e.cantidadInicial);
   await expect(resenas.fila(e.idPendiente)).toContainText(e.estadoPendiente);
@@ -14,7 +14,7 @@ test('UI-02 La calificación es obligatoria y ofrece únicamente 1 a 5 @acceptan
   await expect(resenas.mensaje).toHaveText(e.errorCalificacion);
   await expect(resenas.resenas).toHaveCount(e.cantidadInicial);
 });
-
+// Repetimos el mismo caso para las cinco opciones del formulario.
 for (const caso of calificacionesValidas) {
   test(`UI-03-${caso.id} Acepta calificación ${caso.datos.calificacion} y crea una pendiente @acceptanceTest @HU07`, async ({ resenas }) => {
     const id = await resenas.enviarResena(caso.datos);

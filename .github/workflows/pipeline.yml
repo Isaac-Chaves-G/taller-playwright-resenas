@@ -1,5 +1,6 @@
 name: HU-07 - Pruebas de reseñas
 
+# También se puede lanzar a mano desde la pestaña Actions.
 on:
   push:
     branches: [main, develop]
@@ -29,6 +30,7 @@ jobs:
     env:
       CI: 'true'
       MODO_REFERENCIA: ${{ inputs.modo == 'referencia' && 'true' || 'false' }}
+      # El filtro se busca en el título de cada prueba.
       TEST_TAG: ${{ inputs.testTag || '@acceptanceTest' }}
     steps:
       - name: Obtener el mismo commit de app y pruebas
@@ -64,6 +66,7 @@ jobs:
           if-no-files-found: warn
 
   cierre-del-taller:
+    # Si las pruebas fallan, este trabajo se omite.
     needs: pruebas-aceptacion
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest

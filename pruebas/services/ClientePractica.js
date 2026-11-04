@@ -1,4 +1,4 @@
-// Infraestructura compartida: preparar datos y sesión de la aplicación de práctica.
+// Reinicio y login que comparten las pruebas de interfaz y de API.
 export class ClientePractica {
   constructor(request) { this.request = request; }
   async reiniciar() {

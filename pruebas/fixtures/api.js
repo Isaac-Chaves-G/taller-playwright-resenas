@@ -10,6 +10,7 @@ export const test = base.extend({
   },
 
   clienteAnonimo: async ({ playwright, baseURL }, use) => {
+    // Este contexto no comparte las cookies del cliente que inició sesión.
     const contexto = await playwright.request.newContext({ baseURL });
     try { await use(new ClienteResenas(contexto)); } finally { await contexto.dispose(); }
   },

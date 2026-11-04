@@ -1,6 +1,6 @@
 import { ClientePractica } from './ClientePractica.js';
 
-// Reutiliza reinicio y sesión, y agrega las operaciones propias de reseñas.
+// El reinicio y el login se heredan; aquí quedan las peticiones de reseñas.
 export class ClienteResenas extends ClientePractica {
   async consultar() { return this.request.get('/api/resenas'); }
   async crear(datos) { return this.request.post('/api/resenas', { data: datos }); }

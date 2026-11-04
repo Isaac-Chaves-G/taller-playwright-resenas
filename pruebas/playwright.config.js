@@ -7,13 +7,14 @@ const baseURL = `http://127.0.0.1:${puerto}`;
 
 export default defineConfig({
   testDir: './tests',
-  // /api/reiniciar cambia un estado global: ni archivos ni proyectos deben competir.
+  // El reinicio afecta a todos los usuarios: ejecutamos un caso a la vez.
   fullyParallel: false,
   workers: 1,
   forbidOnly: !!process.env.CI,
   retries: 0,
   timeout: 30_000,
   expect: { timeout: 5_000 },
+  // Guardamos por separado los resultados del original y los de referencia.
   outputDir: `test-results/${modo}`,
   reporter: [
     ['list'],
@@ -33,11 +34,12 @@ export default defineConfig({
     { name: 'chromium', testMatch: '**/ui/*.spec.js', use: { browserName: 'chromium' } },
   ],
   webServer: {
+    // Playwright arranca la app antes de probar y la cierra al terminar.
     command: 'node server.js',
     cwd: '../app',
     url: baseURL,
     env: { PORT: String(puerto), MODO_REFERENCIA: String(referencia) },
-    // Un servidor nuevo evita confundir el original con la referencia.
+    // Así no usamos por error un servidor que quedó abierto en otro modo.
     reuseExistingServer: false,
     timeout: 30_000,
     stdout: 'pipe',

@@ -1,6 +1,6 @@
 import { test, expect } from '../../fixtures/api.js';
 import { escenario as e, contrato as c, calificacionesValidas, calificacionesInvalidas } from '../../data/resenas.js';
-
+// Estos casos comprueban las respuestas del servidor sin abrir el navegador.
 test('API-01 El promedio inicial excluye pendientes @bug @HU07', async ({ cliente }) => {
   const respuesta = await cliente.consultar();
   expect(respuesta.status()).toBe(c.correcto);
@@ -96,7 +96,7 @@ for (const caso of calificacionesValidas) {
     expect(datos.resenas).toContainEqual(creada);
   });
 }
-
+// Además del error, comprobamos que el rechazo no haya guardado ni cambiado nada.
 for (const caso of calificacionesInvalidas) {
   test(`API-14-${caso.id} Rechaza calificación ${caso.nombre} sin cambiar el estado @acceptanceTest @HU07`, async ({ cliente }) => {
     const antes = await (await cliente.consultar()).json();

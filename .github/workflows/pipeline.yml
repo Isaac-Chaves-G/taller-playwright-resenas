@@ -1,0 +1,72 @@
+name: HU-07 - Pruebas de reseñas
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      testTag:
+        description: 'Filtro por título: @acceptanceTest, @bug, UI-01 o @HU07 (suite completa)'
+        required: false
+        default: '@acceptanceTest'
+        type: string
+      modo:
+        description: 'Original conserva el bug; referencia usa el interruptor incluido por la profesora'
+        required: true
+        default: original
+        type: choice
+        options: [original, referencia]
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas-aceptacion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CI: 'true'
+      MODO_REFERENCIA: ${{ inputs.modo == 'referencia' && 'true' || 'false' }}
+      TEST_TAG: ${{ inputs.testTag || '@acceptanceTest' }}
+    steps:
+      - name: Obtener el mismo commit de app y pruebas
+        uses: actions/checkout@v7
+      - name: Preparar Node.js y caché de npm
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            pruebas/package-lock.json
+      - name: Instalar la app con versiones fijadas
+        run: npm ci --prefix app
+      - name: Instalar las pruebas con versiones fijadas
+        run: npm ci --prefix pruebas
+      - name: Instalar Chromium y sus dependencias de Linux
+        working-directory: pruebas
+        run: npx playwright install --with-deps chromium
+      - name: Ejecutar el filtro solicitado (webServer inicia y apaga la app)
+        working-directory: pruebas
+        run: npx playwright test --grep "$TEST_TAG"
+      - name: Guardar reportes incluso cuando hay fallos
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: evidencias-hu07-${{ github.run_id }}-${{ inputs.modo || 'original' }}
+          path: |
+            pruebas/playwright-report/
+            pruebas/test-results/
+            pruebas/resultados/
+          retention-days: 14
+          if-no-files-found: warn
+
+  cierre-del-taller:
+    needs: pruebas-aceptacion
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirmar el alcance de este ejercicio
+        run: echo "Las pruebas seleccionadas pasaron. El taller termina aquí, sin despliegue en Render."

@@ -29,6 +29,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
+    { name: 'api', testMatch: '**/api/*.spec.js' },
     { name: 'chromium', testMatch: '**/ui/*.spec.js', use: { browserName: 'chromium' } },
   ],
   webServer: {

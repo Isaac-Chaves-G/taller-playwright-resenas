@@ -9,6 +9,7 @@
     "test:aceptacion": "npm run test:aceptacion --prefix pruebas",
     "test:bug": "npm run test:bug --prefix pruebas",
     "test:referencia": "npm run test:referencia --prefix pruebas",
+    "test:api": "npm run test:api --prefix pruebas",
     "test:ui": "npm run test:ui --prefix pruebas"
   }
 }
